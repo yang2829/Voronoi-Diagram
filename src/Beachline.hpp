@@ -1,16 +1,22 @@
 #pragma once
 
 #include "define.hpp"
+#include "Arc.hpp"
 
 class Beachline
 {
 public:
-    Beachline() : root(nullptr) {}
-    ~Beachline() {free(root);}
-    friend class Fortune;
+    Beachline() {
+        Nil = new Arc(nullptr, Arc::Color::B, nullptr);
+        root = Nil;
+    }
+    ~Beachline() {free(root); delete(Nil); }
+    bool isNil(const Arc* a) const { return a == Nil; }
     Arc* locateArc(double x, double liney);
     double intersectionArc(std::pair<double, double> p1, std::pair<double, double> p2, double liney);
     void remove(Arc* z);
+
+    friend class Fortune;
 
 private:
     Arc* minimum(Arc* x) const;
@@ -21,4 +27,5 @@ private:
     void rightRotate(Arc* y);
     void free(Arc* arc);
     Arc* root;
+    Arc* Nil;
 };

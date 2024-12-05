@@ -2,14 +2,19 @@
 
 #include <functional>
 #include "define.hpp"
+#include "Arc.hpp"
+
+struct Arc;
 
 class Event
 {
 public:
     // Site event
-    Event(Site* s) : site_type(true), deleted(false), y(s->point.second), s(s) {}
+    Event(Site* s, double y) : site_type(true), deleted(false), s(s), y(y) {}
     // Circle event
-    Event(double y, std::pair<double, double> point, Arc* arc) : site_type(false), deleted(false), y(y), point(point), arc(arc) {}
+    Event(double y, std::pair<double, double> point, Arc* arc) : site_type(false), deleted(false), y(y), point(point), arc(arc) {
+        std::cout << "creat circle event liney:" << y << " x:" << point.first << " y:" << point.second << std::endl;
+    }
 
     struct CompareEvent {
 		bool operator() (const Event* l, const Event* r) const { return (l->y < r->y); }
@@ -24,6 +29,6 @@ private:
     Site* s;
     // Circle event
     std::pair<double, double> point;
-    Arc* arc;
+    Arc* arc = nullptr;
 
 };
