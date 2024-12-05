@@ -230,3 +230,13 @@ void Beachline::rightRotate(Arc* y) {
     x->right = y;
     y->parent = x;
 }
+
+void Beachline::free(Arc* x) {
+    if (x == nullptr)
+        return;
+    else {
+        free(x->left);
+        free(x->right);
+        delete x;
+    }
+}

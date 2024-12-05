@@ -6,6 +6,7 @@ class Beachline
 {
 public:
     Beachline() : root(nullptr) {}
+    ~Beachline() {free(root);}
     friend class Fortune;
     Arc* locateArc(double x, double liney);
     double intersectionArc(std::pair<double, double> p1, std::pair<double, double> p2, double liney);
@@ -18,5 +19,6 @@ private:
     void removeFixup(Arc* x);
     void leftRotate(Arc* x);
     void rightRotate(Arc* y);
+    void free(Arc* arc);
     Arc* root;
 };

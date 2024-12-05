@@ -27,6 +27,6 @@ public:
 
 private:
     std::vector<Site> points;
-    std::vector<std::pair<std::pair<double, double>, std::pair<double, double>>> edges;
+    std::vector<Edge> edges;
     std::vector<std::vector<size_t>> face;
 };

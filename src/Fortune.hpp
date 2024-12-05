@@ -31,6 +31,7 @@ private:
     void handleSiteEvent(Site* s);
     void handleCircleEvent(std::pair<double, double> p, Arc* arc);
     size_t addSiteEdge(Site* s, Site* target);
+    void addCircleEdge(std::pair<double, double> p, Arc* arc);
     void addEvent(Arc* target);
     bool eventPoint(Arc* target, double& y);
 };

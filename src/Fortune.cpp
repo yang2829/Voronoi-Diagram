@@ -88,9 +88,17 @@ void Fortune::handleCircleEvent(std::pair<double, double> p, Arc* arc) {
         rightArc->event->deleted = true;
         rightArc->event = nullptr;
     }
-    diagram.edges[arc->prev->r_edge].second = p;
-    diagram.edges[arc->next->l_edge].second = p;
-
+    diagram.edges[arc->prev->r_edge].p2 = p;
+    diagram.edges[arc->prev->r_edge].finish = true;
+    diagram.edges[arc->next->l_edge].p2 = p;
+    diagram.edges[arc->next->l_edge].finish = true;
+    addCircleEdge(p, arc);
+    beachline.remove(arc);
+    delete arc;
+    if (leftArc->prev != nullptr)
+        addEvent(leftArc);
+    if (rightArc->next != nullptr)
+        addEvent(rightArc);
 }
 
 size_t Fortune::addSiteEdge(Site* s, Site* target) {
@@ -98,13 +106,28 @@ size_t Fortune::addSiteEdge(Site* s, Site* target) {
     double x1 = s->point.first, x2 = target->point.first, y2 = target->point.second;
     double t = x1 - x2;
     double y = ((t*t) / (2*(y2 - liney))) + ((y2 + liney)/2);
-    diagram.edges.push_back({{x1, y}, {NULL, NULL}});
-    diagram.edges.push_back({{x1, y}, {NULL, NULL}});
+    std::pair<double, double> o1 = {-(s->point.second - target->point.second), s->point.first-target->point.first};
+    if (o1.first > 0)
+        o1 = -o1;
+    diagram.edges.push_back(Edge({x1,y}, {NULL, NULL}, o1));
+    diagram.edges.push_back(Edge({x1,y}, {NULL, NULL}, -o1));
     diagram.face[s->index].push_back(nedge);
     diagram.face[s->index].push_back(nedge+1);
     diagram.face[target->index].push_back(nedge);
     diagram.face[target->index].push_back(nedge+1);
     return nedge;
+}
+
+void Fortune::addCircleEdge(std::pair<double, double> p, Arc* arc) {
+    size_t nedge = diagram.edges.size();
+    std::pair<double, double> o1 = {-(arc->prev->site->point.second - arc->next->site->point.second), arc->prev->site->point.first-arc->next->site->point.first};
+    if (o1.second > 0)
+        o1 = -o1;
+    diagram.edges.push_back(Edge(p, {NULL, NULL}, o1));
+    diagram.face[arc->prev->site->index].push_back(nedge);
+    diagram.face[arc->next->site->index].push_back(nedge);
+    arc->prev->r_edge = nedge;
+    arc->next->l_edge = nedge;
 }
 
 void Fortune::addEvent(Arc* target) {
