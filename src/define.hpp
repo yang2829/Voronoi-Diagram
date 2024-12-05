@@ -5,8 +5,8 @@
 
 struct Arc {
     enum class Color{R, B};
-    Arc(Arc* p, Arc* l, Arc* r, Arc* prev, Arc* next, Site* s, std::pair<double, double>* le, std::pair<double, double>* re, Event* e, Color c)
-     : parent(p), left(l), right(r), prev(prev), next(next), site(s), l_edge(le), r_edge(re), event(e), color(c) {}
+    Arc(Arc* prev, Arc* next, Site* s, size_t le, size_t re, Color c)
+     : prev(prev), next(next), site(s), l_edge(le), r_edge(re), color(c) {}
     Arc(Site* s, Color c)
      : site(s), color(c) {}
 
@@ -18,8 +18,8 @@ struct Arc {
     Arc* next = nullptr;
     // Diagram
     Site* site;
-    std::pair<double, double>* l_edge = nullptr;
-    std::pair<double, double>* r_edge = nullptr;
+    size_t l_edge = NULL;
+    size_t r_edge = NULL;
     Event* event = nullptr;
     // Only for balancing
     Color color;
@@ -31,3 +31,13 @@ struct Site {
     std::pair<double, double> point;
     // Face* face;
 };
+
+std::pair<double, double> operator+(const std::pair<double, double>& a,const std::pair<double, double>& b) {
+    return {a.first+b.first, a.second+b.second};
+}
+std::pair<double, double> operator-(const std::pair<double, double>& a,const std::pair<double, double>& b) {
+    return {a.first-b.first, a.second-b.second};
+}
+std::pair<double, double> operator/(const std::pair<double, double>& a,double b) {
+    return {a.first/b, a.second/b};
+}

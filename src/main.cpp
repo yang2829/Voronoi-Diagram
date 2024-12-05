@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Fortune.h"
+#include "Fortune.hpp"
 
 int main()
 {
