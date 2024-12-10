@@ -19,7 +19,11 @@ public:
 
     void RunAlgo();
     size_t npoints() { return points.size(); }
+    size_t getw() { return width; }
+    size_t geth() { return height; }
 
+    std::vector<Site> get_points() { return points; }
+    std::vector<Edge> get_edges() { return edges; }
     void print_points() {
         for (size_t i = 0; i < points.size(); i++) {
             std::cout << i << ": " << points[i].point.first << " " << points[i].point.second << std::endl;

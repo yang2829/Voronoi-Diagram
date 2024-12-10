@@ -184,3 +184,20 @@ void Fortune::addEvent(Arc* target) {
     target->event = new Event(y, ePoint, target);
     Equeue.push(target->event);
 }
+
+#include <pybind11/pybind11.h>
+#include <pybind11/operators.h>
+#include <pybind11/stl.h>
+
+PYBIND11_MODULE(_Fortune, m) {
+    m.doc() = "fortune";
+
+    pybind11::class_<Fortune>(m, "Fortune")
+        .def(pybind11::init<size_t, size_t, size_t, int>())
+        .def(pybind11::init<std::vector<std::pair<double, double>>, size_t, size_t>())
+        .def(pybind11::init<const Fortune &>())
+        .def("RunAlgo", &Fortune::RunAlgo)
+        .def("npoints", &Fortune::npoints)
+        .def("get_points", &Fortune::get_points)
+        .def("get_edges", &Fortune::get_edges)
+}

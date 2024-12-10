@@ -8,7 +8,7 @@ source = ./src/Beachline.cpp ./src/Fortune.cpp
 # all: $(target)
 
 # $(target): $(source)
-# 	$(CXX) $(CXXFLAGS) -I./ -I$(MKL_INC) -I$(NUMPY) -o $@ $^ -lblas -lmkl_rt
+# 	$(CXX) $(CXXFLAGS) -o $@ $^ -lblas -lmkl_rt
 
 # test: $(target) $(PYTEST)
 # 	python3 -m pytest -v
