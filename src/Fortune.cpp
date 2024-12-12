@@ -3,7 +3,7 @@
 #include <ctime>
 #include "Fortune.hpp"
 
-Fortune::Fortune(size_t n, size_t w, size_t h, int seed) : beachline(), face(n) {
+Fortune::Fortune(size_t n, size_t w, size_t h, int seed) : face(n), beachline() {
     std::default_random_engine generator(seed);
     std::uniform_real_distribution<double> d_x (0.0, double(w));
     std::uniform_real_distribution<double> d_y (0.0, double(h));
@@ -17,7 +17,7 @@ Fortune::Fortune(size_t n, size_t w, size_t h, int seed) : beachline(), face(n) 
     height = h;
 }
 
-Fortune::Fortune(std::vector<std::pair<double, double>> p, size_t w, size_t h) : beachline(), face(p.size()) {
+Fortune::Fortune(std::vector<std::pair<double, double>> p, size_t w, size_t h) : face(p.size()), beachline() {
     for (size_t i = 0; i < p.size(); i++) {
         points.push_back(Site(i, p[i]));
     }
@@ -61,10 +61,10 @@ void Fortune::handleSiteEvent(Site* s) {
         middleArc->event = nullptr;
     }
 
-    Arc* leftArc = new Arc(middleArc->prev, middleArc, middleArc->site, middleArc->l_edge, NULL, Arc::Color::R, beachline.Nil);
+    Arc* leftArc = new Arc(middleArc->prev, middleArc, middleArc->site, middleArc->l_edge, 0, Arc::Color::R, beachline.Nil);
     if (!beachline.isNil(leftArc->prev))
         leftArc->prev->next = leftArc;
-    Arc* rightArc = new Arc(middleArc, middleArc->next, middleArc->site, NULL, middleArc->r_edge, Arc::Color::R, beachline.Nil);
+    Arc* rightArc = new Arc(middleArc, middleArc->next, middleArc->site, 0, middleArc->r_edge, Arc::Color::R, beachline.Nil);
     if (!beachline.isNil(rightArc->next))
         rightArc->next->prev = rightArc;
     middleArc->prev = leftArc;
@@ -72,7 +72,7 @@ void Fortune::handleSiteEvent(Site* s) {
     size_t nedge = addSiteEdge(s, middleArc->site);
     middleArc->site = s;
     middleArc->l_edge = nedge;
-    middleArc->r_edge = nedge+1;
+    middleArc->r_edge = nedge;
     if (beachline.isNil(middleArc->left)) {
         middleArc->left = leftArc;
         leftArc->parent = middleArc;
@@ -107,10 +107,28 @@ void Fortune::handleCircleEvent(std::pair<double, double> p, Arc* arc) {
         rightArc->event->deleted = true;
         rightArc->event = nullptr;
     }
-    edges[arc->prev->r_edge].p2 = p;
-    edges[arc->prev->r_edge].finish = true;
-    edges[arc->next->l_edge].p2 = p;
-    edges[arc->next->l_edge].finish = true;
+    if (arc->prev->r_edge != 0) {
+        if (!edges[arc->prev->r_edge].d_finish) {
+            edges[arc->prev->r_edge].d = p;
+            edges[arc->prev->r_edge].d_finish = true;
+        }
+        else if (!edges[arc->prev->r_edge].s_finish){
+            edges[arc->prev->r_edge].s = p;
+            edges[arc->prev->r_edge].s_finish = true;
+        }
+        // else may have error
+    }
+    if (arc->next->l_edge != 0) {
+        if (!edges[arc->next->l_edge].s_finish) {
+            edges[arc->next->l_edge].s = p;
+            edges[arc->next->l_edge].s_finish = true;
+        }
+        else if (!edges[arc->next->l_edge].d_finish){
+            edges[arc->next->l_edge].d = p;
+            edges[arc->next->l_edge].d_finish = true;
+        }
+        // else may have error
+    }
     addCircleEdge(p, arc);
     beachline.remove(arc);
     delete arc;
@@ -122,18 +140,13 @@ void Fortune::handleCircleEvent(std::pair<double, double> p, Arc* arc) {
 
 size_t Fortune::addSiteEdge(Site* s, Site* target) {
     size_t nedge = edges.size();
-    double x1 = s->point.first, x2 = target->point.first, y2 = target->point.second;
-    double t = x1 - x2;
-    double y = ((t*t) / (2*(y2 - liney))) + ((y2 + liney)/2);
-    std::pair<double, double> o1 = {-(s->point.second - target->point.second), s->point.first-target->point.first};
-    if (o1.first > 0)
+    double x1 = s->point.first, y1 = s->point.second, x2 = target->point.first, y2 = target->point.second;
+    std::pair<double, double> o1 = {-(y1 - y2), x1 - x2};
+    if (o1.first < 0)
         o1 = -o1;
-    edges.push_back(Edge({x1,y}, {NULL, NULL}, o1));
-    edges.push_back(Edge({x1,y}, {NULL, NULL}, -o1));
+    edges.push_back(Edge({(x1+x2)/2,(y1+y2)/2}, {NULL, NULL}, o1));
     face[s->index].push_back(nedge);
-    face[s->index].push_back(nedge+1);
     face[target->index].push_back(nedge);
-    face[target->index].push_back(nedge+1);
     return nedge;
 }
 
@@ -143,6 +156,7 @@ void Fortune::addCircleEdge(std::pair<double, double> p, Arc* arc) {
     if (o1.second > 0)
         o1 = -o1;
     edges.push_back(Edge(p, {NULL, NULL}, o1));
+    edges[nedge].s_finish = true;
     face[arc->prev->site->index].push_back(nedge);
     face[arc->next->site->index].push_back(nedge);
     arc->prev->r_edge = nedge;
@@ -183,21 +197,4 @@ void Fortune::addEvent(Arc* target) {
         return;
     target->event = new Event(y, ePoint, target);
     Equeue.push(target->event);
-}
-
-#include <pybind11/pybind11.h>
-#include <pybind11/operators.h>
-#include <pybind11/stl.h>
-
-PYBIND11_MODULE(_Fortune, m) {
-    m.doc() = "fortune";
-
-    pybind11::class_<Fortune>(m, "Fortune")
-        .def(pybind11::init<size_t, size_t, size_t, int>())
-        .def(pybind11::init<std::vector<std::pair<double, double>>, size_t, size_t>())
-        .def(pybind11::init<const Fortune &>())
-        .def("RunAlgo", &Fortune::RunAlgo)
-        .def("npoints", &Fortune::npoints)
-        .def("get_points", &Fortune::get_points)
-        .def("get_edges", &Fortune::get_edges)
 }

@@ -31,9 +31,9 @@ public:
     }
     void print_edges() {
         for (size_t i = 0; i < edges.size(); i++) {
-            std::cout << i << ": status: " << edges[i].finish << std::endl;
-            std::cout << "{" << edges[i].p1.first << ", " << edges[i].p1.second << "}  -->  ";
-            std::cout << "{" << edges[i].p2.first << " " << edges[i].p2.second << "}\n";
+            std::cout << i << ": status: " << edges[i].s_finish << " " << edges[i].d_finish << std::endl;
+            std::cout << "{" << edges[i].s.first << ", " << edges[i].s.second << "}  -->  ";
+            std::cout << "{" << edges[i].d.first << " " << edges[i].d.second << "}\n";
             std::cout << "v: " << edges[i].v.first << ", " << edges[i].v.second << std::endl << std::endl;
         }
     }

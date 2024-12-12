@@ -1,6 +1,5 @@
 #pragma once
 
-#include "define.hpp"
 #include "Arc.hpp"
 
 class Beachline

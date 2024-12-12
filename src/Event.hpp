@@ -10,9 +10,9 @@ class Event
 {
 public:
     // Site event
-    Event(Site* s, double y) : site_type(true), deleted(false), s(s), y(y) {}
+    Event(Site* s, double y) : site_type(true), y(y), s(s) {}
     // Circle event
-    Event(double y, std::pair<double, double> point, Arc* arc) : site_type(false), deleted(false), y(y), point(point), arc(arc) {
+    Event(double y, std::pair<double, double> point, Arc* arc) : site_type(false), y(y), point(point), arc(arc) {
         std::cout << "creat circle event liney:" << y << " x:" << point.first << " y:" << point.second << std::endl;
     }
 
@@ -23,10 +23,10 @@ public:
 
 private:
     const bool site_type;
-    bool deleted;
+    bool deleted = false;
     double y;
     // Site event
-    Site* s;
+    Site* s = nullptr;
     // Circle event
     std::pair<double, double> point;
     Arc* arc = nullptr;

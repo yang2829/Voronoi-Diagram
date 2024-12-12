@@ -10,11 +10,12 @@ struct Site {
 };
 
 struct Edge{
-    Edge(std::pair<double, double> a, std::pair<double, double> b, std::pair<double, double> v) : p1(a), p2(b), v(v) {}
-    std::pair<double, double> p1;
-    std::pair<double, double> p2;
+    Edge(std::pair<double, double> a, std::pair<double, double> b, std::pair<double, double> v) : s(a), d(b), v(v) {}
+    std::pair<double, double> s;
+    std::pair<double, double> d;
     std::pair<double, double> v;
-    bool finish = false;
+    bool s_finish = false;
+    bool d_finish = false;
 };
 
 
