@@ -15,7 +15,7 @@ class Fortune
 public:
     Fortune(size_t n, size_t w = 500, size_t h = 500, int seed = 1512);
     Fortune(std::vector<std::pair<double, double>> p, size_t w = 500, size_t h = 500);
-    Fortune(const Fortune& d);
+    // Fortune(const Fortune& other);
 
     void RunAlgo();
     size_t npoints() { return points.size(); }

@@ -1,14 +1,10 @@
-import sys
-import os
-import timeit
+import _fortune
+import pytest
 import unittest
-
-# The python module that wraps the matrix code.
-import _matrix
 
 class PyApiTest(unittest.TestCase):
 
-    def test_construct(self, size):
+    def test_init(self):
 
         g1 = _fortune.Fortune(8)
         self.assertEqual(8, g1.npoints())

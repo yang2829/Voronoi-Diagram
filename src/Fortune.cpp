@@ -27,6 +27,8 @@ Fortune::Fortune(std::vector<std::pair<double, double>> p, size_t w, size_t h) :
     height = h;
 }
 
+// Fortune::Fortune(const Fortune& other) {}
+
 void Fortune::RunAlgo() {
     for (size_t i = 0; i < npoints(); i++)
         Equeue.push(new Event(&points[i], points[i].point.second));
