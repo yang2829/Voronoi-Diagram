@@ -12,9 +12,7 @@ public:
     // Site event
     Event(Site* s, double y) : site_type(true), y(y), s(s) {}
     // Circle event
-    Event(double y, std::pair<double, double> point, Arc* arc) : site_type(false), y(y), point(point), arc(arc) {
-        std::cout << "creat circle event liney:" << y << " x:" << point.first << " y:" << point.second << std::endl;
-    }
+    Event(double y, std::pair<double, double> point, Arc* arc) : site_type(false), y(y), point(point), arc(arc) {}
 
     struct CompareEvent {
 		bool operator() (const Event* l, const Event* r) const { return (l->y < r->y); }

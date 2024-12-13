@@ -5,7 +5,7 @@ CXXFLAGS = -std=c++17 -Wall -O3 -shared -fPIC -m64 $(shell python3 -m pybind11 -
 PYTEST = test_fortune.py
 source = ./src/Beachline.cpp ./src/Fortune.cpp ./src/main.cpp
 
-all: $(target)
+all: clean $(target)
 
 $(target): ./src/*.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $^

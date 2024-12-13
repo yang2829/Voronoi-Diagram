@@ -37,6 +37,7 @@ public:
             std::cout << "v: " << edges[i].v.first << ", " << edges[i].v.second << std::endl << std::endl;
         }
     }
+    bool info_out = false;
 
 private:
     size_t width, height;

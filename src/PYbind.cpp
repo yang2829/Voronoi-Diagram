@@ -19,7 +19,10 @@ PYBIND11_MODULE(_fortune, m) {
     py::class_<Edge>(m, "Edge")
         .def(py::init<std::pair<double, double>, std::pair<double, double>, std::pair<double, double>>())
         .def_readonly("s", &Edge::s)
-        .def_readonly("d", &Edge::d);
+        .def_readonly("d", &Edge::d)
+        .def_readonly("v", &Edge::v)
+        .def_readonly("s_finish", &Edge::s_finish)
+        .def_readonly("d_finish", &Edge::d_finish);
 
     py::class_<Arc>(m, "Arc")
         .def(py::init<Arc*, Arc*, Site*, size_t, size_t, Arc::Color, Arc*>())
@@ -40,5 +43,6 @@ PYBIND11_MODULE(_fortune, m) {
         .def("getw", &Fortune::getw)
         .def("geth", &Fortune::geth)
         .def("get_points", &Fortune::get_points)
-        .def("get_edges", &Fortune::get_edges);
+        .def("get_edges", &Fortune::get_edges)
+        .def_readwrite("info_out", &Fortune::info_out);
 }

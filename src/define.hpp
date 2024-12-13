@@ -31,3 +31,6 @@ inline std::pair<double, double> operator/(const std::pair<double, double>& a, d
 inline std::pair<double, double> operator-(const std::pair<double, double>& a) {
     return {-a.first, -a.second};
 }
+inline bool operator!=(const std::pair<double, double>& a, const std::pair<double, double>& b) {
+    return (a.first != b.first || a.second != b.second);
+}
