@@ -3,9 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def main():
-    g1 = _fortune.Fortune(20)
+    g1 = _fortune.Fortune(10)
     g1.RunAlgo()
-    g1.completeEdge()
     points = g1.get_points()
     edges = g1.get_edges()
     x = []

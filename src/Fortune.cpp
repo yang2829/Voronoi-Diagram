@@ -49,6 +49,7 @@ void Fortune::RunAlgo() {
             handleCircleEvent(e->point, e->arc);
         delete(e);
     }
+    completeEdge();
 }
 
 void Fortune::handleSiteEvent(Site* s) {
@@ -219,7 +220,7 @@ void Fortune::addEvent(Arc* target) {
 
 void Fortune::completeEdge() {
     for (size_t i = 1; i < edges.size(); i++) {
-        if (!edges[i].d_finish || !edges[i].s_finish)
+        if (info_out && (!edges[i].d_finish || !edges[i].s_finish))
             std::cout << edges[i].s_finish << " " << edges[i].d_finish << "\n"
                       << "s:" << edges[i].s.first << ", " << edges[i].s.second << " "
                       << "d:" << edges[i].d.first << ", " << edges[i].d.second << "\n"

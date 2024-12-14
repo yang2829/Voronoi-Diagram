@@ -14,8 +14,14 @@ class PyApiTest(unittest.TestCase):
         self.assertEqual(300, g1.getw())
         self.assertEqual(400, g1.geth())
 
-    def test_algo(self):
+    def test_random(self):
         g1 = _fortune.Fortune()
         g1.RunAlgo()
-        points = g1.get_points()
         edges = g1.get_edges()
+        for e in edges:
+            tmpx = e.s[0] - e.d[0]
+            tmpy = e.s[1] - e.d[1]
+            if (abs(tmpx) < 1e-2):
+                assert abs(e.v[0]) < 1e-2
+            else:
+                assert abs(abs(tmpy/tmpx) - abs(e.v[1]/e.v[0])) < 1e-5
