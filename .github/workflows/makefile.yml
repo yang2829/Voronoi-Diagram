@@ -25,7 +25,7 @@ jobs:
 
     - name: contrib
       run: |
-        sudo contrib/install.sh everything
+        sudo contrib/install.sh
 
     - name: Run build
       run: make && make test
