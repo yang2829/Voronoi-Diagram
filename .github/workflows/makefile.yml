@@ -23,6 +23,10 @@ jobs:
             python3-numpy
         cd /usr/bin ; sudo ln -sf py.test-3 py.test
 
+    - name: contrib
+      run: |
+        sudo contrib/install.sh everything
+
     - name: Run build
       run: make && make test
 
