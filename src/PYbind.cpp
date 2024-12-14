@@ -39,6 +39,7 @@ PYBIND11_MODULE(_fortune, m) {
         .def(py::init<size_t, size_t, size_t, int>(),pybind11::arg("n") = 8 , pybind11::arg("w") = 500, pybind11::arg("h") = 500, pybind11::arg("seed") = 1512)
         .def(py::init<std::vector<std::pair<double, double>>, size_t, size_t>())
         .def("RunAlgo", &Fortune::RunAlgo)
+        .def("completeEdge", &Fortune::completeEdge)
         .def("npoints", &Fortune::npoints)
         .def("getw", &Fortune::getw)
         .def("geth", &Fortune::geth)
