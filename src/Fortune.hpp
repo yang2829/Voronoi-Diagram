@@ -18,6 +18,7 @@ public:
     // Fortune(const Fortune& other);
 
     void RunAlgo();
+    void completeEdge();
     size_t npoints() { return points.size(); }
     size_t getw() { return width; }
     size_t geth() { return height; }

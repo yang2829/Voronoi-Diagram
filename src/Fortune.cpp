@@ -152,7 +152,7 @@ size_t Fortune::addSiteEdge(Site* s, Site* target) {
     size_t nedge = edges.size();
     double x1 = s->point.first, y1 = s->point.second, x2 = target->point.first, y2 = target->point.second;
     std::pair<double, double> o1 = {-(y1 - y2), x1 - x2};
-    if (o1.first < 0)
+    if (o1.second < 0)
         o1 = -o1;
     edges.push_back(Edge({(x1+x2)/2,(y1+y2)/2}, {0,0}, o1));
     face[s->index].push_back(nedge);
@@ -163,8 +163,6 @@ size_t Fortune::addSiteEdge(Site* s, Site* target) {
 void Fortune::addCircleEdge(std::pair<double, double> p, Arc* arc) {
     size_t nedge = edges.size();
     std::pair<double, double> o1 = {-(arc->prev->site->point.second - arc->next->site->point.second), arc->prev->site->point.first-arc->next->site->point.first};
-    if (o1.second > 0)
-        o1 = -o1;
     edges.push_back(Edge(p, {0,0}, o1));
     edges[nedge].s_finish = true;
     face[arc->prev->site->index].push_back(nedge);
@@ -217,4 +215,63 @@ void Fortune::addEvent(Arc* target) {
     if (info_out)
         std::cout << "creat circle event liney:" << y << " x:" << ePoint.first << " y:" << ePoint.second << std::endl;
     Equeue.push(target->event);
+}
+
+void Fortune::completeEdge() {
+    for (size_t i = 1; i < edges.size(); i++) {
+        if (!edges[i].d_finish || !edges[i].s_finish)
+            std::cout << edges[i].s_finish << " " << edges[i].d_finish << "\n"
+                      << "s:" << edges[i].s.first << ", " << edges[i].s.second << " "
+                      << "d:" << edges[i].d.first << ", " << edges[i].d.second << "\n"
+                      << "v:" << edges[i].v.first << ", " << edges[i].v.second << "\n";
+        if (!edges[i].s_finish) {
+            if (!edges[i].d_finish) {
+                double tmpx = 0, tmpy = 0;
+                if (edges[i].v.first < 0) {
+                    tmpx = (edges[i].s.first/(-edges[i].v.first));
+                }
+                else if (edges[i].v.first > 0) {
+                    tmpx = ((width - edges[i].s.first)/(edges[i].v.first));
+                }
+                if (edges[i].v.second < 0) {
+                    tmpy = (edges[i].s.second/(-edges[i].v.second));
+                }
+                else if (edges[i].v.second > 0) {
+                    tmpy = ((height - edges[i].s.second)/(edges[i].v.second));
+                }
+                edges[i].d = edges[i].s + (edges[i].v * std::min(tmpx, tmpy));
+            }
+            edges[i].v = -edges[i].v;
+            double tmpx = 0, tmpy = 0;
+            if (edges[i].v.first < 0) {
+                tmpx = (edges[i].s.first/(-edges[i].v.first));
+            }
+            else if (edges[i].v.first > 0) {
+                tmpx = ((width - edges[i].s.first)/(edges[i].v.first));
+            }
+            if (edges[i].v.second < 0) {
+                tmpy = (edges[i].s.second/(-edges[i].v.second));
+            }
+            else if (edges[i].v.second > 0) {
+                tmpy = ((height - edges[i].s.second)/(edges[i].v.second));
+            }
+            edges[i].s = edges[i].s + (edges[i].v * std::min(tmpx, tmpy));
+        }
+        else if (!edges[i].d_finish) {
+            double tmpx = 0, tmpy = 0;
+            if (edges[i].v.first < 0) {
+                tmpx = (edges[i].s.first/(-edges[i].v.first));
+            }
+            else if (edges[i].v.first > 0) {
+                tmpx = ((width - edges[i].s.first)/(edges[i].v.first));
+            }
+            if (edges[i].v.second < 0) {
+                tmpy = (edges[i].s.second/(-edges[i].v.second));
+            }
+            else if (edges[i].v.second > 0) {
+                tmpy = ((height - edges[i].s.second)/(edges[i].v.second));
+            }
+            edges[i].d = edges[i].s + (edges[i].v * std::min(tmpx, tmpy));
+        }
+    }
 }

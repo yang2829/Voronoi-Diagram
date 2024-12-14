@@ -28,6 +28,9 @@ inline std::pair<double, double> operator-(const std::pair<double, double>& a, c
 inline std::pair<double, double> operator/(const std::pair<double, double>& a, double b) {
     return {a.first/b, a.second/b};
 }
+inline std::pair<double, double> operator*(const std::pair<double, double>& a, double b) {
+    return {a.first*b, a.second*b};
+}
 inline std::pair<double, double> operator-(const std::pair<double, double>& a) {
     return {-a.first, -a.second};
 }
